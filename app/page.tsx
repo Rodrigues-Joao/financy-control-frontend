@@ -2,6 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowTrendUp } from "@fortawesome/free-solid-svg-icons"
 import DetailResultCard from "./components/DetailResultCard";
 import CurrencyNumber from "./components/CurrencyNumber";
+import { api } from "./lib/axios";
 
 export default function Home()
 {
