@@ -14,15 +14,13 @@ export default function DetailResultCard( { isGain = true, amount }: DetailResul
 {
     const icon: IconProp = isGain ? faArrowTrendUp : faArrowTrendDown;
     const iconColor: string = isGain ? "green" : "red";
-
-
-
     return (
-        <div className="flex w-30 h-30 bg-white justify-around items-center rounded-md p-2 w-64">
+        <div className="flex  h-30 bg-white  dark:bg-gray-900 dark:border dark:border-gray-300 my-2 justify-around items-center rounded-md p-2 md:max-w-64 sm:max-w-32 ">
+
             <FontAwesomeIcon className="w-10" icon={icon} color={iconColor} />
             <div className="flex flex-col">
                 <CurrencyNumber value={amount} />
-                <p className="text-sm">{isGain ? "Ganhos" : "Gastos"} do mes</p>
+                <p className="text-sm dark:text-white">{isGain ? "Ganhos" : "Gastos"} do mes</p>
             </div>
         </div>
     )
