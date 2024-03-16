@@ -1,5 +1,6 @@
 'use client'
 import DetailResultCard from "@/app/components/DetailResultCard";
+import Header from "@/app/components/Header";
 import TransactionItemList from "@/app/components/TransactionItemList";
 
 import { api } from "@/app/lib/axios";
@@ -18,7 +19,7 @@ export default async function Resume()
     }
     return (
         <div className="flex flex-col min-h-scre  ">
-            <div className="bg-blue-400 py-3 flex flex-col items-center "><p className="text-2xl font-bold text-white">Extrato</p></div>
+            <Header title="Extrato"></Header>
             <div className="px-4 w-full my-4"> <input className="w-full h-10 rounded-md"></input></div>
             <div className="flex flex-row px-4  w-full">
                 <h1 className="text-xl">Resumo do mês {monthNames[new Date().getMonth()]}</h1>

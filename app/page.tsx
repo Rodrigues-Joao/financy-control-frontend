@@ -19,8 +19,9 @@ export default function Home()
             <DetailResultCard amount={0} ></DetailResultCard>
             <DetailResultCard isGain={false} amount={0}></DetailResultCard>
           </div>
+          <a href="/transactions/resume" className="underline ">Extrato</a>
         </div>
       </div >
     </main>
   );
-}
+} 1

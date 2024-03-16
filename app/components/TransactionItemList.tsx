@@ -6,7 +6,7 @@ import CurrencyNumber from "./CurrencyNumber";
 interface TransactionItemListProps
 {
     data: TransactionType[],
-    handleClick?: ( transaction: TransactionType ) => void;
+    handleClick: ( transaction: TransactionType ) => void;
 }
 
 export default function TransactionItemList( { data, handleClick }: TransactionItemListProps )
