@@ -12,7 +12,7 @@ interface TransactionItemListProps
 export default function TransactionItemList( { data, handleClick }: TransactionItemListProps )
 {
     return (
-        <ul className="dark:text-white">
+        <ul className="dark:text-white md:w-2/3  w-full mx-auto">
             {
                 data.map( ( transaction, index ) =>
                 {

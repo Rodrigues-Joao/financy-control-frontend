@@ -8,8 +8,8 @@ interface HeaderProps
 export default function Header( { title, navigation }: HeaderProps )
 {
     return (
-        <div className="bg-blue-400 py-3 flex flex-col items-center " >
-            <p className="text-2xl font-bold text-white" > {title} </p>
+        <div className="bg-blue-400 py-3 " >
+            <p className="text-2xl  text-center  font-bold text-white mx-auto" > {title} </p>
         </div >
     )
 

@@ -15,7 +15,7 @@ export default function DetailResultCard( { isGain = true, amount }: DetailResul
     const icon: IconProp = isGain ? faArrowTrendUp : faArrowTrendDown;
     const iconColor: string = isGain ? "green" : "red";
     return (
-        <div className="flex  h-30 bg-white  dark:bg-gray-900 dark:border dark:border-gray-300 my-2 justify-around items-center rounded-md p-2 md:max-w-64 sm:max-w-32 ">
+        <div className="flex h-30 mx-auto bg-white  dark:bg-gray-900 dark:border dark:border-gray-300 my-2 justify-around items-center rounded-md p-2  w-full  md:w-64">
 
             <FontAwesomeIcon className="w-10" icon={icon} color={iconColor} />
             <div className="flex flex-col">
