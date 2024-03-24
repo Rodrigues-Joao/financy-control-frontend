@@ -1,12 +1,16 @@
+'use client'
+
 import { forwardRef, InputHTMLAttributes } from "react";
+import { useForm } from "react-hook-form";
 
 interface InputRadioProps extends InputHTMLAttributes<HTMLInputElement>
 {
     description: string;
 }
 
-const InputRadio = forwardRef<HTMLInputElement, InputRadioProps>( function InputRadio( { description, ...props }: InputRadioProps, ref )
+const FieldInputRadio = forwardRef<HTMLInputElement, InputRadioProps>( function FieldInputRadio( { description, teste, ...props }: InputRadioProps, ref )
 {
+
     return (
         <div className="relative" >
             <input ref={ref} type="radio" {...props} className="peer bg-transparent hover:cursor-pointer m-0 z-[2] absolute w-full h-full opacity-0" />
@@ -17,4 +21,4 @@ const InputRadio = forwardRef<HTMLInputElement, InputRadioProps>( function Input
     )
 } )
 
-export default InputRadio
+export default FieldInputRadio
