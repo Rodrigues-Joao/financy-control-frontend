@@ -6,7 +6,7 @@ interface SelectProps extends SelectHTMLAttributes<HTMLSelectElement>
     children: ReactNode
 }
 
-const FieldSelect = forwardRef<HTMLSelectElement, SelectProps>( async function FieldSelect( { children, ...props }: SelectProps, ref )
+const FieldSelect = forwardRef<HTMLSelectElement, SelectProps>( function FieldSelect( { children, ...props }: SelectProps, ref )
 {
 
     return (
