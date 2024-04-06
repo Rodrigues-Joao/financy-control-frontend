@@ -23,7 +23,7 @@ export default async function Resume()
     return (
         <div className="flex flex-col min-h-scre  ">
             <Header title="Extrato"></Header>
-            <div className="px-4 w-full my-4 md:w-2/3"> <input className="w-full h-10 rounded-md"></input></div>
+            <div className="px-4 w-full my-4 md:w-2/3 "> <input className="w-full h-10 rounded-md"></input></div>
             <div className="flex flex-row px-4  w-full  md:w-2/3">
                 <h1 className="text-xl">Resumo do mês {monthNames[new Date().getMonth()]}</h1>
             </div>

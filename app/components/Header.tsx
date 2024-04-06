@@ -11,7 +11,7 @@ interface HeaderProps
 export default function Header( { title, navigation }: HeaderProps )
 {
     return (
-        <div className="bg-blue-400 py-3  flex " >
+        <div className="bg-blue-400 py-3  flex   w-full" >
             {
                 navigation &&
 
