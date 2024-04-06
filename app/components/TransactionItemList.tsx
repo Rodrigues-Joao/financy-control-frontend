@@ -33,7 +33,7 @@ export default function TransactionItemList( { data, handleClick }: TransactionI
 
                             </div>
                             <div className="flex flex-col items-end">
-                                <p className=""><CurrencyNumber className={`text-xl font-bold ${ transaction.TransactionsType.id == 1 ? 'dark:text-red-500 text-red-500' : '' }`} value={transaction.amount}></CurrencyNumber></p>
+                                <p className=""><CurrencyNumber className={`text-xl font-bold ${ transaction.TransactionsType.id == 1 ? 'dark:text-red-500 text-red-500' : transaction.TransactionsType.id == 2 ? 'dark:text-green-500 text-green-500' : '' }`} value={transaction.amount}></CurrencyNumber></p>
                                 <p className="text-sm">{DateFormater( transaction.date )}</p>
                             </div>
 

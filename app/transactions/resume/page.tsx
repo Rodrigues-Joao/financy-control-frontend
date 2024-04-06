@@ -5,6 +5,8 @@ import TransactionItemList from "@/app/components/TransactionItemList";
 
 import { api } from "@/app/lib/axios";
 import { ResponseTransactionsType, TransactionType } from "@/app/types/transactions";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
 export default async function Resume()
@@ -15,6 +17,7 @@ export default async function Resume()
 
     function handleClickTransaction( transaction: TransactionType ): void
     {
+
         console.log( `${ transaction.description }` );
     }
     return (
@@ -33,6 +36,7 @@ export default async function Resume()
                 <TransactionItemList data={responseTransactions.transactions} handleClick={handleClickTransaction} ></TransactionItemList>
 
 
+                <a className=" fixed bottom-10 right-10   " href="/transactions/add">      <FontAwesomeIcon className="bg-black rounded-full" icon={faPlusCircle} color="Green" size="4x" /></a>
             </div>
         </div >
     )

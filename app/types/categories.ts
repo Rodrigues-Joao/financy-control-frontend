@@ -2,8 +2,9 @@ export type ResponseCategoriesType = {
     categories: CategoriesType[]
 }
 
-type CategoriesType = {
+export type CategoriesType = {
     id: number;
     category: string;
+    categoryTypeId: number;
     subCategory: CategoriesType[]
 }
