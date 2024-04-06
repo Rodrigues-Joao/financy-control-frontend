@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import Field from "./Form/Field/Index";
 import Form from "./Form/Index";
 import { useState } from "react";
-import { ResponseCategoriesType } from "../types/categories";
+import { CategoriesType, ResponseCategoriesType } from "../types/categories";
 import { ResponseAccountsType } from "../types/accounts";
 import { CurrencyInput } from "react-currency-mask";
 import Button from "./Button";
@@ -11,6 +11,8 @@ import Header from "./Header";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import Modal from "./Modal";
+import List from "./List/Index";
+import { faAngleRight, faArrowRight, faHouse } from "@fortawesome/free-solid-svg-icons";
 interface AddTransactionProps
 {
     categories: ResponseCategoriesType;
@@ -36,6 +38,10 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
     const [colorAmount, setColorAmount] = useState( "placeholder:text-red-500  text-red-500" )
     const [description, setDescription] = useState( "Gasto" )
     const [transactionsType, setTransactionsType] = useState( 1 )
+    const [openModalCategory, setOpenModalCategory] = useState( false )
+    const [categoriesList, setCategoriesList] = useState( categories.categories )
+    const [selectedCategory, setSelectedCategory] = useState<CategoriesType>( categories.categories[0] )
+    const [visibleBackButton, setVisibleBackButton] = useState( false )
 
     const date = new Date();
     const dateString = date.toISOString().split( 'T' )[0]
@@ -92,17 +98,19 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
         {
             case "1":
                 //setCategories( res )
+                setCategoriesList( categories.categories.filter( category => category.categoryTypeId == 1 ) )
                 setColorAmount( "placeholder:text-red-500  text-red-500 " )
                 setDescription( "Gasto" )
                 setTransactionsType( 1 )
                 break;
             case "2":
-                //  setCategoriesFilter( categories.categories.filter( category => category.categoryTypeId == 1 ) )
+                setCategoriesList( categories.categories.filter( category => category.categoryTypeId == 2 ) )
                 setColorAmount( "text-green-500 placeholder:text-green-500" )
                 setDescription( "Ganho" )
                 setTransactionsType( 2 )
                 break;
             case "3":
+                setCategoriesList( categories.categories.filter( category => category.categoryTypeId == 3 ) )
                 setColorAmount( "text-black placeholder:text-white dark:text-white" )
                 setDescription( "Transferência" )
                 setTransactionsType( 3 )
@@ -110,6 +118,21 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
 
         }
     };
+
+    function handleCategory( category: CategoriesType )
+    {
+        setSelectedCategory( category )
+        if ( category.subCategory?.length > 0 )
+        {
+            setVisibleBackButton( true )
+            setCategoriesList( category.subCategory )
+        }
+        else
+        {
+            setOpenModalCategory( false )
+        }
+
+    }
     return (
         <>
             <Header navigation="/transactions/resume" title={`Registrar ${ description }`}></Header>
@@ -173,12 +196,43 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                 <Field.Root>
                     <Field.Description>Categoria</Field.Description>
 
-                    <Modal visible={false} >
-                        <div>
-                            mymodel
+                    <Modal backButtonVisible={visibleBackButton} visible={openModalCategory} backNavigation={() =>
+                    {
+                        setVisibleBackButton( false )
+                        setCategoriesList( categories.categories )
+                    }}>
+                        <div className="flex flex-col items-center">
+                            <p>Categorias</p>
+                            <p>Selecionada : {selectedCategory.category}</p>
+                        </div>
+                        <div className="w-full flex flex-col justify-between  h-full ">
+                            <List.Root >
+                                {
+                                    categoriesList.map( category =>
+                                    {
+                                        if ( category.categoryTypeId === transactionsType )
+                                            return (
+                                                <List.Item onClick={() => handleCategory( category )} key={category.id} className="border-none mt-2 bg-gray-800 rounded-md">
+                                                    <List.Content >
+                                                        <List.ContentTitle title={category.category} />
+                                                    </List.Content>
+                                                    <List.Icon icon={faAngleRight} color="gray" />
+                                                </List.Item>
+                                            )
+                                    } )
+                                }
+                            </List.Root>
+                            <Button onClick={() => { setOpenModalCategory( false ) }}> Escolher</Button>
                         </div>
                     </Modal>
-                    <Field.Select {...register( "categoryId" )} >
+                    {/* <Field.Input {...register( "categoryId" )} onClick={() => setOpenModalCategory( true )} value={selectedCategory?.id} className="hover:cursor-pointer">
+
+                    </Field.Input> */}
+                    <Field.Select className="invisible" {...register( "categoryId" )} value={selectedCategory?.id} onClick={( event ) =>
+                    {
+
+                        setOpenModalCategory( true )
+                    }}  >
                         {
                             categories?.categories.map( ( category ) =>
                             {
@@ -209,7 +263,7 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                 </Button>
 
 
-            </Form.Root>
+            </Form.Root >
         </>
     )
 }

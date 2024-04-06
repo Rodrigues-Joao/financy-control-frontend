@@ -3,6 +3,7 @@ import ItemListContent from "./ItemListContent"
 import ItemListContentSubtiltle from "./ItemListContentSubtitle"
 import ItemListContentTitle from "./ItemListContentTitle"
 import ItemListDetail from "./ItemListDetail"
+import ItemListIcon from "./ItemListIcon"
 import ListRoot from "./ListRoot"
 
 const List =
@@ -12,7 +13,8 @@ const List =
     Content: ItemListContent,
     Detail: ItemListDetail,
     ContentTitle: ItemListContentTitle,
-    ContentSubtitle: ItemListContentSubtiltle
+    ContentSubtitle: ItemListContentSubtiltle,
+    Icon: ItemListIcon
 
 }
 

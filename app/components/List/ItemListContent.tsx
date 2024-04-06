@@ -1,13 +1,14 @@
-import { ReactNode } from "react"
+import { HtmlHTMLAttributes, ReactNode } from "react"
+import { twMerge } from "tailwind-merge"
 
-interface ItemListContentProps
+interface ItemListContentProps extends HtmlHTMLAttributes<HTMLElement>
 {
     children: ReactNode
 }
-export default function ItemListContent( { children }: ItemListContentProps )
+export default function ItemListContent( { children, ...props }: ItemListContentProps )
 {
     return (
-        <div className="">
+        <div {...props} className={twMerge( "flex flex-col", props.className )}>
 
             {children}
 
