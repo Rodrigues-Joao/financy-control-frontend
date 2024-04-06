@@ -10,6 +10,7 @@ import Button from "./Button";
 import Header from "./Header";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
+import Modal from "./Modal";
 interface AddTransactionProps
 {
     categories: ResponseCategoriesType;
@@ -171,6 +172,12 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                 </Field.Root>
                 <Field.Root>
                     <Field.Description>Categoria</Field.Description>
+
+                    <Modal visible={false} >
+                        <div>
+                            mymodel
+                        </div>
+                    </Modal>
                     <Field.Select {...register( "categoryId" )} >
                         {
                             categories?.categories.map( ( category ) =>

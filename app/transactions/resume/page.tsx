@@ -15,11 +15,7 @@ export default async function Resume()
     const responseTransactions: ResponseTransactionsType = response.data
     const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-    function handleClickTransaction( transaction: TransactionType ): void
-    {
 
-        console.log( `${ transaction.description }` );
-    }
     return (
         <div className="flex flex-col min-h-scre  ">
             <Header title="Extrato"></Header>
@@ -33,7 +29,7 @@ export default async function Resume()
                     <DetailResultCard amount={responseTransactions.TotalIncome} ></DetailResultCard>
                     <DetailResultCard isGain={false} amount={responseTransactions.TotalExpenses}></DetailResultCard>
                 </div>
-                <TransactionItemList data={responseTransactions.transactions} handleClick={handleClickTransaction} ></TransactionItemList>
+                <TransactionItemList data={responseTransactions.transactions} ></TransactionItemList>
 
 
                 <a className=" fixed bottom-10 right-10   " href="/transactions/add">      <FontAwesomeIcon className="bg-black rounded-full" icon={faPlusCircle} color="Green" size="4x" /></a>

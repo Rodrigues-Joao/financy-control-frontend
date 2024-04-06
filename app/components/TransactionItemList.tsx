@@ -1,48 +1,35 @@
 
 import { TransactionType } from "../types/transactions";
-import { DateFormater } from "../ultils/DateFormater";
-import CurrencyNumber from "./CurrencyNumber";
+import List from "./List/Index";
 
 interface TransactionItemListProps
 {
     data: TransactionType[],
-    handleClick: ( transaction: TransactionType ) => void;
+
 }
-
-export default function TransactionItemList( { data, handleClick }: TransactionItemListProps )
+export default function TransactionItemList( { data }: TransactionItemListProps )
 {
+    function handleClickTransaction( transaction: TransactionType ): void
+    {
+
+        console.log( `${ transaction.description }` );
+    }
     return (
-        <ul className="dark:text-white md:w-2/3  w-full mx-auto">
+
+        <List.Root>
             {
-                data.map( ( transaction, index ) =>
-                {
-
-                    const isPair = index % 2 == 0 ? true : false;
-                    return (
-                        <li className={`flex flex-row justify-between p-2  items-center border-b border-b-gray-300 hover:cursor-pointer  ${ isPair ? 'dark:bg-gray-800' : 'dark:bg-gray-700' }`} key={transaction.id} onClick={() => handleClick( transaction )}>
-                            <div>
-                                <div className="flex items-center gap-1">
-                                    <p className="text-lg font-bold">{transaction.description}</p>
-                                    <p className={`text-sm font-normal ${ transaction.isRecurrence ? 'invisible' : '' }`}>{transaction.current_installments}/{transaction.installments}</p>
-                                </div>
-                                <div className="flex">
-                                    <p className="text-sm">{transaction.Category.category}</p>
-                                    <p className="mx-1 text-sm">|</p>
-                                    <p className="text-sm">{transaction.PaymentType.type}</p>
-                                </div>
-
-                            </div>
-                            <div className="flex flex-col items-end">
-                                <p className=""><CurrencyNumber className={`text-xl font-bold ${ transaction.TransactionsType.id == 1 ? 'dark:text-red-500 text-red-500' : transaction.TransactionsType.id == 2 ? 'dark:text-green-500 text-green-500' : '' }`} value={transaction.amount}></CurrencyNumber></p>
-                                <p className="text-sm">{DateFormater( transaction.date )}</p>
-                            </div>
-
-                        </li>
-                    )
-                }
-                )
+                data.map( ( transaction ) =>
+                (
+                    <List.Item onClick={() => handleClickTransaction( transaction )} key={transaction.id}>
+                        <List.Content>
+                            <List.ContentTitle title={transaction.description} detail={`${ transaction.current_installments }/${ transaction.installments }`}></List.ContentTitle>
+                            <List.ContentSubtitle subtitle={`${ transaction.Category.category } | ${ transaction.PaymentType.type }`} />
+                        </List.Content>
+                        <List.Detail description={transaction.amount} style={transaction.TransactionsType.id == 1 ? 'dark:text-red-500 text-red-500' : transaction.TransactionsType.id == 2 ? 'dark:text-green-500 text-green-500' : ''} />
+                    </List.Item>
+                ) )
             }
-        </ul>
+        </List.Root>
 
     )
 }
