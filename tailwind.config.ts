@@ -1,3 +1,4 @@
+import { transform } from "next/dist/build/swc";
 import type { Config } from "tailwindcss";
 
 const config: Config = {
@@ -14,6 +15,20 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
     },
+    keyframes: {
+      'open-menu': {
+        '0%': { transform: 'scaleX(0)' },
+        '100%': { transform: 'scaleX(1)' }
+      },
+      'close-menu': {
+        '100%': { transform: 'scaleX(1)' },
+        '0%': { transform: 'scaleX(0)' }
+      },
+    },
+    animation: {
+      'open-menu': 'open-menu 0.1s ease-in-out forwards',
+      'close-menu': 'close-menu 0.1s ease-in-out forwards'
+    }
   },
   plugins: [],
 };

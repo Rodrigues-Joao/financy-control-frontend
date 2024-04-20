@@ -9,7 +9,7 @@ export default function CurrencyNumber( { value, ...props }: CurrencyNumberType 
 {
     const color = value < 0 ? 'text-red-600' : '';
     return (
-        <span className={twMerge( "text-2xl font-bold dark:text-white", props.className, color )}>{currencyFormatter.format( value, { code: 'BRL' } )}</span>
+        <span className={twMerge( "text-md font-bold dark:text-white", props.className, color )}>{currencyFormatter.format( value, { code: 'BRL' } )}</span>
     )
 
 }

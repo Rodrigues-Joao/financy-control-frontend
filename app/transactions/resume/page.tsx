@@ -34,7 +34,7 @@ export default async function Resume()
                 <TransactionItemList data={responseTransactions.transactions} ></TransactionItemList>
 
 
-                <a className=" fixed bottom-10 right-10   " href="/transactions/add">      <FontAwesomeIcon className="bg-black rounded-full" icon={faPlusCircle} color="Green" size="4x" /></a>
+                <a className=" fixed bottom-10 right-10  z-1  " href="/transactions/add">      <FontAwesomeIcon className="bg-black rounded-full" icon={faPlusCircle} color="Green" size="4x" /></a>
             </div>
         </div >
     )

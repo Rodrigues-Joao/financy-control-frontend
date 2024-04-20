@@ -1,6 +1,7 @@
 
 
 import AddTransaction from "@/app/components/AddTransaction";
+import Header from "@/app/components/Header";
 import { api } from "@/app/lib/axios";
 import { ResponseAccountsType } from "@/app/types/accounts";
 import { ResponseCategoriesType } from "@/app/types/categories";
@@ -13,9 +14,12 @@ export default async function Add()
     const categories: ResponseCategoriesType = resCategories.data;
     const accounts: ResponseAccountsType = resAccounts.data;
     return (
-        <div className="flex flex-col min-h-screen">
+        <>
+            <Header navigation="/transactions/resume" title={`Registrar transação`}></Header>
+            <div className="flex flex-col min-h-screen">
 
-            <AddTransaction categories={categories} accounts={accounts}></AddTransaction>
-        </div>
+                <AddTransaction categories={categories} accounts={accounts}></AddTransaction>
+            </div>
+        </>
     )
 }
