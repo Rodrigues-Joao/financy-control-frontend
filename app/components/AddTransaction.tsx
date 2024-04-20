@@ -12,7 +12,8 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import Modal from "./Modal";
 import List from "./List/Index";
-import { faAngleRight, faArrowRight, faHouse } from "@fortawesome/free-solid-svg-icons";
+import { faAngleDown, faAngleRight, faArrowRight, faHouse } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 interface AddTransactionProps
 {
     categories: ResponseCategoriesType;
@@ -225,12 +226,19 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                             <Button onClick={() => { setOpenModalCategory( false ) }}> Escolher</Button>
                         </div>
                     </Modal>
-                    {/* <Field.Input {...register( "categoryId" )} onClick={() => setOpenModalCategory( true )} value={selectedCategory?.id} className="hover:cursor-pointer">
+                    <div className="flex flex-row justify-between p-2  items-center   border border-gray-700  px-2 py-3  hover:cursor-pointer" onClick={() => setOpenModalCategory( true )}>
+                        <div className="flex flex-col">
+                            <p>{selectedCategory.category}</p>
 
-                    </Field.Input> */}
-                    <Field.Select className="invisible" {...register( "categoryId" )} value={selectedCategory?.id} onClick={( event ) =>
+                        </div>
+                        <FontAwesomeIcon className="w-10" icon={faAngleDown} color={"gray"} />
+                    </div>
+                    <Field.Input {...register( "categoryId" )} value={selectedCategory?.id} className="hidden">
+
+                    </Field.Input>
+                    {/* <Field.Select {...register( "categoryId" )} value={selectedCategory?.id} onClick={( event ) =>
                     {
-
+                        event.preventDefault();
                         setOpenModalCategory( true )
                     }}  >
                         {
@@ -242,7 +250,7 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                                     )
                             } )
                         }
-                    </Field.Select>
+                    </Field.Select> */}
                 </Field.Root>
                 <Field.Root>
                     <Field.Description>Conta</Field.Description>
