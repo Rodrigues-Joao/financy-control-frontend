@@ -15,6 +15,7 @@ import List from "./List/Index";
 import { faAngleDown, faAngleRight, faArrowRight, faHouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CurrencyNumber from "./CurrencyNumber";
+import { api } from "../lib/axios";
 interface AddTransactionProps
 {
     categories: ResponseCategoriesType;
@@ -23,16 +24,16 @@ interface AddTransactionProps
 
 const createTransactionSchema = z.object( {
     paymentMethod: z.string(),
-    description: z.string(),
-    amount: z.number().min( 0.01 ),
-    installments: z.number().default( 1 ),
+    description: z.string().min( 1, "Descrição é necessária" ),
+    amount: z.number( { required_error: "Coloque um valor" } ).min( 0.1, "Coloque um valor" ),
+    installments: z.coerce.number().default( 1 ),
     isRecurrence: z.boolean().default( false ),
-    paymentTypeId: z.number().optional(),
-    transactionsTypeId: z.number(),
-    accountsId: z.number(),
-    userId: z.number(),
-    categoryId: z.number(),
-    date: z.string().datetime()
+    paymentTypeId: z.coerce.number(),
+    transactionsTypeId: z.coerce.number(),
+    accountsId: z.coerce.number(),
+    userId: z.number().default( 1 ),
+    categoryId: z.coerce.number(),
+    date: z.string()
 } )
 type CreateTransactionSchema = z.infer<typeof createTransactionSchema>
 export default function AddTransaction( { categories, accounts }: AddTransactionProps )
@@ -40,7 +41,7 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
     const [colorAmount, setColorAmount] = useState( "placeholder:text-red-500  text-red-500" )
     const [description, setDescription] = useState( "Gasto" )
     const [isInstallment, setIsInstallment] = useState( false )
-    const [installment, setInstallment] = useState( 1 )
+    const [installment, setInstallment] = useState<number>( 1 )
     const [amountInstallment, setAmountInstallment] = useState( 0 )
     const [transactionsType, setTransactionsType] = useState( 1 )
     const [openModalCategory, setOpenModalCategory] = useState( false )
@@ -53,29 +54,29 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
     let isRecurrence = false;
     const [amount, setAmount] = useState<number | string>();
     const {
-        handleSubmit, register, control, formState: { errors },
+        handleSubmit, register, control, watch, formState: { errors },
     } = useForm<CreateTransactionSchema>( {
         resolver: zodResolver( createTransactionSchema ),
     } )
 
     async function handleCreateTransactions( data: CreateTransactionSchema )
     {
-        console.log( data )
+        console.log( data.transactionsTypeId )
 
-        // let result = await api.post( "transactions", {
-        //     description: data.description,
-        //     amount: parseFloat( data.amount ),
-        //     installments: data.installments | 1,
-        //     isRecurrence: isRecurrence,
-        //     paymentTypeId: parseInt( data.paymentTypeId ),
-        //     transactionsTypeId: parseInt( data.transactionsTypeId ) | 2,
-        //     accountsId: parseInt( data.accountsId ),
-        //     userId: 1,
-        //     categoryId: parseInt( data.categoryId ),
-        //     date: new Date( data.date )
-        // } )
+        let result = await api.post( "transactions", {
+            description: data.description,
+            amount: data.amount,
+            installments: data.installments | 1,
+            isRecurrence: isRecurrence,
+            paymentTypeId: data.paymentTypeId,
+            transactionsTypeId: data.transactionsTypeId,
+            accountsId: data.accountsId,
+            userId: 1,
+            categoryId: data.categoryId,
+            date: new Date( data.date )
+        } )
 
-        // console.log( result.data )
+        console.log( result.data )
     }
 
     function handlepaymentTypeChange( event: any ): void
@@ -171,9 +172,9 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
             <Form.Root onSubmit={handleSubmit( handleCreateTransactions )}>
 
                 <div className="flex gap-2 ">
-                    <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} defaultChecked={true} description={"Gastos"} value={1} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
-                    <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} description={"Ganhos"} value={2} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
-                    <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} description={"Transferência"} value={3} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
+                    <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} defaultChecked={true} description={"Gastos"} value={"1"} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
+                    <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} description={"Ganhos"} value={"2"} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
+                    <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} description={"Transferência"} value={"3"} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
                 </div>
                 <Field.Root>
                     <Field.Description>{`Valor do ${ description }`}</Field.Description>
@@ -202,15 +203,18 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                         )}
 
                     />
-                    {errors.amount?.message && <p>{errors.amount.message}</p>}
+                    {errors.amount?.message && <p className="text-red-800">{errors.amount.message}</p>}
                 </Field.Root>
                 <Field.Root>
                     <Field.Description>Descrição</Field.Description>
-                    <Field.Input {...register( "description" )} placeholder="Digite a descrição"></Field.Input>
+                    <Field.Input {...register( "description" )} placeholder="Digite a descrição" className={errors.description?.message ? "border-red-500" : ''}></Field.Input>
+                    {/* {errors.description?.message && <p className="text-red-800">{errors.description?.message}</p>} */}
+
                 </Field.Root>
                 <Field.Root>
                     <Field.Description>Data</Field.Description>
                     <Field.Input {...register( "date" )} defaultValue={dateString} type="date" ></Field.Input>
+
                 </Field.Root>
                 <Field.Root className={transactionsType != 1 ? "hidden" : ""} >
                     <Field.Description>Forma de pagamento</Field.Description>

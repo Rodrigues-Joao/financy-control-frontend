@@ -11,7 +11,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 export default async function Resume()
 {
-    const response = await api.get( "/transactions?userId=1&currentMonth=3" )
+    const currentMonth = new Date().getMonth()
+    console.log( currentMonth )
+    const response = await api.get( `/transactions?userId=1&currentMonth=${ currentMonth }` )
     const responseTransactions: ResponseTransactionsType = response.data
     const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
