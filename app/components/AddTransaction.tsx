@@ -14,6 +14,7 @@ import Modal from "./Modal";
 import List from "./List/Index";
 import { faAngleDown, faAngleRight, faArrowRight, faHouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import CurrencyNumber from "./CurrencyNumber";
 interface AddTransactionProps
 {
     categories: ResponseCategoriesType;
@@ -38,6 +39,9 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
 {
     const [colorAmount, setColorAmount] = useState( "placeholder:text-red-500  text-red-500" )
     const [description, setDescription] = useState( "Gasto" )
+    const [isInstallment, setIsInstallment] = useState( false )
+    const [installment, setInstallment] = useState( 1 )
+    const [amountInstallment, setAmountInstallment] = useState( 0 )
     const [transactionsType, setTransactionsType] = useState( 1 )
     const [openModalCategory, setOpenModalCategory] = useState( false )
     const [categoriesList, setCategoriesList] = useState( categories.categories )
@@ -47,6 +51,7 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
     const date = new Date();
     const dateString = date.toISOString().split( 'T' )[0]
     let isRecurrence = false;
+    const [amount, setAmount] = useState<number | string>();
     const {
         handleSubmit, register, control, formState: { errors },
     } = useForm<CreateTransactionSchema>( {
@@ -75,13 +80,18 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
 
     function handlepaymentTypeChange( event: any ): void
     {
+
         switch ( event.target.value )
         {
-
+            case "installment":
+                setIsInstallment( true )
+                break;
             case "recurrence":
+                setIsInstallment( false )
                 isRecurrence = true;
                 break;
             default:
+                setIsInstallment( false )
                 isRecurrence = false;
                 break;
         }
@@ -119,7 +129,28 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
 
         }
     };
+    function handleInstallment( event: any )
+    {
+        let value = 0;
+        if ( typeof ( amount ) === 'string' )
+            value = parseInt( amount )
+        else if ( typeof ( amount ) === 'number' )
+        {
+            value = amount
+        }
 
+        let installment = event.target.value;
+        if ( installment < 0 )
+            installment = ''
+        setInstallment( installment )
+
+        console.log( value )
+        console.log( installment )
+
+        if ( value > 0 )
+            setAmountInstallment( value / ( installment === '' ? 1 : installment ) )
+
+    }
     function handleCategory( category: CategoriesType )
     {
         setSelectedCategory( category )
@@ -149,7 +180,12 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
 
                     <Controller
 
-                        {...register( "amount" )}
+                        {...register( "amount", {
+                            onChange( event )
+                            {
+                                setAmountInstallment( event.target.value / installment )
+                            },
+                        } )}
                         control={control}
                         render={( { field } ) => (
                             <CurrencyInput
@@ -159,6 +195,7 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                                 onChangeValue={( _, value ) =>
                                 {
                                     field.onChange( value );
+                                    setAmount( value );
                                 }}
                                 InputElement={<Field.Input placeholder='R$ 0,00' className={`bg-transparent ${ colorAmount }  text-3xl font-bold focus:outline-none  focus:border-none border-none`} ></Field.Input >}
                             />
@@ -190,10 +227,23 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                         <Field.InputRadio  {...register( "paymentMethod", { onChange: handlepaymentTypeChange } )} description={"Recorrente"} value={"recurrence"} ></Field.InputRadio>
                     </div>
                 </Field.Root>
-                <Field.Root className={transactionsType != 1 ? "hidden" : ""} >
-                    <Field.Description>Parcelas</Field.Description>
-                    <Field.Input type="number" {...register( "installments", { min: 0 } )} placeholder="Insira o número de parcelas"  ></Field.Input>
-                </Field.Root>
+                {
+                    transactionsType == 1 && isInstallment &&
+                    <div>
+
+                        <Field.Root  >
+                            <Field.Description>Parcelas</Field.Description>
+                            <Field.Input type="number" {...register( "installments", { min: 1, onChange: handleInstallment } )} value={installment} placeholder="Insira o número de parcelas"  ></Field.Input>
+                        </Field.Root>
+                        <div className="dark:text-gray-400 gap-1 flex items-end ">
+
+                            <span className="text-sm">{installment ? installment : 1}x</span>
+                            <CurrencyNumber className={"dark:text-gray-400 text-sm font-normal"} value={amountInstallment}> </CurrencyNumber>
+
+                        </div>
+                    </div>
+
+                }
                 <Field.Root>
                     <Field.Description>Categoria</Field.Description>
 
@@ -236,21 +286,6 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                     <Field.Input {...register( "categoryId" )} value={selectedCategory?.id} className="hidden">
 
                     </Field.Input>
-                    {/* <Field.Select {...register( "categoryId" )} value={selectedCategory?.id} onClick={( event ) =>
-                    {
-                        event.preventDefault();
-                        setOpenModalCategory( true )
-                    }}  >
-                        {
-                            categories?.categories.map( ( category ) =>
-                            {
-                                if ( category.categoryTypeId === transactionsType )
-                                    return (
-                                        <option key={category.id} value={category.id} >{category.category}</option>
-                                    )
-                            } )
-                        }
-                    </Field.Select> */}
                 </Field.Root>
                 <Field.Root>
                     <Field.Description>Conta</Field.Description>
