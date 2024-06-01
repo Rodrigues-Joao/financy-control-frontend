@@ -4,11 +4,14 @@ interface ItemListIconProps
 {
     icon: IconProp;
     color: string;
+    backgoundColor?: string
 
 }
-export default function ItemListIcon( { icon, color }: ItemListIconProps )
+export default function ItemListIcon( { icon, color, backgoundColor }: ItemListIconProps )
 {
     return (
-        <FontAwesomeIcon className="w-10" icon={icon} color={color} />
+        <div className={`w-10 h-10  flex items-center rounded ${ backgoundColor }`} >
+            <FontAwesomeIcon className="w-10" icon={icon} color={color} />
+        </div>
     )
 }

@@ -1,5 +1,5 @@
 'use client'
-import { faChartSimple, faClose, faGraduationCap, faHouse, faPlusCircle, faPlusSquare } from "@fortawesome/free-solid-svg-icons";
+import { faBuildingColumns, faChartSimple, faClose, faGraduationCap, faHouse, faLayerGroup, faPlusCircle, faPlusSquare } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import List from "./List/Index";
 import Link from "next/link";
@@ -43,6 +43,22 @@ export default function Menu( { closeMenu }: MenuProps )
                             <List.Icon icon={faChartSimple} color='white'></List.Icon>
                             <List.Content>
                                 <List.ContentTitle title="Resumo"></List.ContentTitle>
+                            </List.Content>
+                        </List.Item>
+                    </Link>
+                    <Link href={'/categories'}>
+                        <List.Item key={2} className="mt-2  rounded-md justify-normal" >
+                            <List.Icon icon={faLayerGroup} color='white'></List.Icon>
+                            <List.Content>
+                                <List.ContentTitle title="Categorias"></List.ContentTitle>
+                            </List.Content>
+                        </List.Item>
+                    </Link>
+                    <Link href={'/accounts'}>
+                        <List.Item key={2} className="mt-2  rounded-md justify-normal" >
+                            <List.Icon icon={faBuildingColumns} color='white'></List.Icon>
+                            <List.Content>
+                                <List.ContentTitle title="Contas"></List.ContentTitle>
                             </List.Content>
                         </List.Item>
                     </Link>

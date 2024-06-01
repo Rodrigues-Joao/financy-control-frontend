@@ -9,5 +9,6 @@ export default function ItemListContentSubtitle( { subtitle }: ItemListContentSu
     return (
         <div className="flex">
             <p className="text-sm">{subtitle}</p>
-        </div> )
+        </div>
+    )
 }

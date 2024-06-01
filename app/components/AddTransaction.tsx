@@ -170,12 +170,11 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
 
 
         <Form.Root onSubmit={handleSubmit( handleCreateTransactions )}>
-
-            <div className="flex gap-2 ">
+            <Field.Root className="flex gap-2">
                 <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} defaultChecked={true} description={"Gastos"} value={"1"} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
                 <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} description={"Ganhos"} value={"2"} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
                 <Field.InputRadio  {...register( "transactionsTypeId", { onChange: handleTransactionTypeChange } )} description={"Transferência"} value={"3"} descriptionStyle="text-lg text-gray-300 peer-checked:font-bold peer-checked:text-white  border-none   px-0 py-0 peer-checked:bg-transparent " ></Field.InputRadio>
-            </div>
+            </Field.Root>
             <Field.Root>
                 <Field.Description>{`Valor do ${ description }`}</Field.Description>
 
@@ -265,15 +264,14 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
                             {
                                 categoriesList.map( category =>
                                 {
-                                    if ( category.categoryTypeId === transactionsType )
-                                        return (
-                                            <List.Item onClick={() => handleCategory( category )} key={category.id} className="border-none mt-2 bg-gray-800 rounded-md">
-                                                <List.Content >
-                                                    <List.ContentTitle title={category.category} />
-                                                </List.Content>
-                                                <List.Icon icon={faAngleRight} color="gray" />
-                                            </List.Item>
-                                        )
+                                    return (
+                                        <List.Item onClick={() => handleCategory( category )} key={category.id} className="border-none mt-2 bg-gray-800 rounded-md">
+                                            <List.Content >
+                                                <List.ContentTitle title={category.category} />
+                                            </List.Content>
+                                            <List.Icon icon={faAngleRight} color="gray" />
+                                        </List.Item>
+                                    )
                                 } )
                             }
                         </List.Root>

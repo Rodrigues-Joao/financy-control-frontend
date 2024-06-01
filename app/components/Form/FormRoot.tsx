@@ -19,7 +19,7 @@ const FormRoot = forwardRef<HTMLFormElement, FormRootProps>( function FormRoot( 
 {
 
     return (
-        <form ref={ref} {...props} className="m-4 flex flex-col gap-4" >
+        <form ref={ref} {...props} className="m-4 flex flex-col gap-4 w-full" >
             {children}
         </form >
     )
