@@ -6,7 +6,7 @@ import Input from "../components/Input";
 import List from "../components/List/Index";
 import ApiCategories from "../api-functions/categories/index"
 import { useEffect, useState } from "react";
-import { CategoriesType, CreateCategory, ResponseCategoriesType } from "../types/categories";
+import { CategoriesType, CreateCategory, CreateCategorySchema, ResponseCategoriesType } from "../types/categories";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
@@ -18,14 +18,6 @@ import { StatusCode } from "../enumerations/StatusCode";
 
 const createFormCategorySchema = z.object( {
     category: z.string(),
-} )
-
-const CreateCategorySchema = z.object( {
-    category: z.string(),
-    parentId: z.number().optional(),
-    userId: z.number().optional(),
-    categoryTypeId: z.number()
-
 } )
 
 type CreateCategoryFormSchema = z.infer<typeof createFormCategorySchema>

@@ -12,11 +12,11 @@ export type CategoriesType = {
     subCategory: CategoriesType[]
 }
 
-export const createCategorySchema = z.object( {
+export const CreateCategorySchema = z.object( {
     category: z.string(),
     parentId: z.number().optional(),
     userId: z.number().optional(),
     categoryTypeId: z.number()
 } )
 
-export type CreateCategory = z.infer<typeof createCategorySchema>
+export type CreateCategory = z.infer<typeof CreateCategorySchema>
