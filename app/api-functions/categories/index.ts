@@ -7,14 +7,18 @@ const Get = async ( userId: number ): Promise<ResponseCategoriesType> =>
 {
     return ( await api.get( `/categories?userId=${ userId }` ) ).data as ResponseCategoriesType
 }
-const Post = async ( payload: CreateCategory ): Promise<ResponseCreated> =>
+const Create = async ( payload: CreateCategory ): Promise<ResponseCreated> =>
 {
     const res = await api.post( "/categories", payload )
-    return res.data as ResponseCreated
+    const result: ResponseCreated = {
+        message: res.data,
+        statusCode: res.status
+    }
+    return result
 }
-
 const Categories = {
-    Get
+    Get,
+    Create
 }
 
 

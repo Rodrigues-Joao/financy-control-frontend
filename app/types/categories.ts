@@ -7,6 +7,7 @@ export type ResponseCategoriesType = {
 export type CategoriesType = {
     id: number;
     category: string;
+    isParent?: boolean;
     categoryTypeId: number;
     subCategory: CategoriesType[]
 }

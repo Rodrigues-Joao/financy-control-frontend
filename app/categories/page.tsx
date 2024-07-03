@@ -6,7 +6,7 @@ import Input from "../components/Input";
 import List from "../components/List/Index";
 import ApiCategories from "../api-functions/categories/index"
 import { useEffect, useState } from "react";
-import { CategoriesType, ResponseCategoriesType } from "../types/categories";
+import { CategoriesType, CreateCategory, ResponseCategoriesType } from "../types/categories";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faAngleLeft } from "@fortawesome/free-solid-svg-icons";
 import Button from "../components/Button";
@@ -14,12 +14,21 @@ import Modal from "../components/Modal";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { StatusCode } from "../enumerations/StatusCode";
 
 const createFormCategorySchema = z.object( {
     category: z.string(),
 } )
 
-type CreateCategorySchema = z.infer<typeof createFormCategorySchema>
+const CreateCategorySchema = z.object( {
+    category: z.string(),
+    parentId: z.number().optional(),
+    userId: z.number().optional(),
+    categoryTypeId: z.number()
+
+} )
+
+type CreateCategoryFormSchema = z.infer<typeof createFormCategorySchema>
 
 export default
     function Categories()
@@ -30,11 +39,12 @@ export default
     const [parentCategory, setParentCategory] = useState<CategoriesType>()
     const [categoryType, setCategoryType] = useState( 1 )
     const [showModalAddCategory, setShowModalAddCategory] = useState( false )
+    const [inputCategory, setInputCategory] = useState<string>()
 
     const [allCategories, setAllCategories] = useState<CategoriesType[]>()
     const {
         handleSubmit, register, control, watch, formState: { errors },
-    } = useForm<CreateCategorySchema>( {
+    } = useForm<CreateCategoryFormSchema>( {
         resolver: zodResolver( createFormCategorySchema ),
     } )
     async function getCategories()
@@ -45,16 +55,13 @@ export default
     }
     function handleCategory( category: CategoriesType )
     {
-        // setSelectedCategory( category )
-        if ( category?.subCategory?.length > 0 )
+        if ( category.isParent )
         {
             setIsSubCategory( true )
             setParentCategory( category )
             setTitle( "Sub categorias" )
             setCategories( category.subCategory )
         }
-
-
     }
     function handleChangeCategoryType( event: any )
     {
@@ -72,19 +79,47 @@ export default
         console.log( allCategories )
         setCategories( allCategories )
     }
-    function handleCategorySubmit( data: CreateCategorySchema )
+    async function handleCategorySubmit( data: CreateCategoryFormSchema )
     {
-
-        console.log( data )
-
-
+        setInputCategory( "" );
+        let createCategory: CreateCategory = {
+            category: data.category,
+            categoryTypeId: categoryType,
+            userId: 1,
+        }
+        if ( isSubCategory )
+        {
+            createCategory.parentId = parentCategory?.id
+        }
+        let resSchema;
+        try
+        {
+            resSchema = CreateCategorySchema.parse( createCategory )
+        }
+        catch ( err )
+        {
+            return;
+        }
+        const res = await ApiCategories.Create( resSchema )
+        if ( res.statusCode == StatusCode.Created )
+        {
+            setIsSubCategory( false );
+            setShowModalAddCategory( false );
+        }
 
     }
+
+    function handleInputCategoryChange( event: React.ChangeEvent<HTMLInputElement> ): void
+    {
+        setInputCategory( event.target.value )
+
+    }
+
     useEffect( () =>
     {
         getCategories()
 
-    }, [] )
+    }, [showModalAddCategory] )
     return (
         <>
             <Header title={title} />
@@ -111,28 +146,39 @@ export default
 
             <div className="p-4 flex gap-4  flex-col items-center">
 
-                <List.Root>
-                    {
-                        categories?.map( category =>
-                        {
-                            if ( category.categoryTypeId === categoryType )
+                {
+                    categories != undefined && categories?.length > 0 ? (
+
+                        <List.Root>
                             {
-                                return (
-                                    <List.Item className="h-20 px-4 mb-1 rounded bg-gray-800 border-none" key={category.id} onClick={() => handleCategory( category )}>
-                                        <List.Content >
-                                            <List.ContentTitle title={category.category} />
-                                            {
-                                                category.subCategory?.length > 0 &&
-                                                <List.ContentSubtitle subtitle={`${ category.subCategory.length } sub categoria`} />
-                                            }
-                                        </List.Content>
-                                    </List.Item>
-                                )
+                                categories?.map( category =>
+                                {
+                                    if ( category.categoryTypeId === categoryType )
+                                    {
+                                        return (
+                                            <List.Item className="h-20 px-4 mb-1 rounded bg-gray-800 border-none" key={category.id} onClick={() => handleCategory( category )}>
+                                                <List.Content >
+                                                    <List.ContentTitle title={category.category} />
+                                                    {
+                                                        category.subCategory?.length > 0 &&
+                                                        <List.ContentSubtitle subtitle={`${ category.subCategory.length } sub categoria`} />
+                                                    }
+                                                </List.Content>
+                                            </List.Item>
+                                        )
+                                    }
+
+                                } )
                             }
 
-                        } )
-                    }
-                </List.Root>
+
+                        </List.Root>
+                    ) : (
+                        <div className="flex flex-row  items-center m-4">
+                            <h1 className="text-lg mx-auto text-cyan-50"> {isSubCategory ? "Nenhuma sub categoria cadastrada" : "Nenhuma Categoria cadastrada"}</h1>
+                        </div>
+                    )
+                }
                 <Button onClick={handleAddCategory} className="px-4 rounded-md py-2 bg-blue-400 absolute bottom-10 mx-auto" >Adicionar  {isSubCategory ? "SubCategoria" : "Categoria"}</Button>
             </div>
             <Modal className="self-center mx-auto relative" visible={showModalAddCategory} >
@@ -145,11 +191,18 @@ export default
                             <Field.Description>
                                 Nome da categoria
                             </Field.Description>
-                            <Field.Input {...register( "category" )} placeholder="alimentação"></Field.Input>
+                            <Field.Input {...register( "category", { onChange: handleInputCategoryChange } )} value={inputCategory} placeholder="nome da categoria"></Field.Input>
                         </Field.Root>
 
                         <div className="flex gap-2">
-                            <Button onClick={() => setShowModalAddCategory( false )} className="px-4 rounded-md py-2 bg-red-500 w-full ">Cancelar</Button>
+                            <Button onClick={
+                                () =>
+                                {
+                                    setShowModalAddCategory( false )
+                                    setInputCategory( "" );
+                                }
+
+                            } className="px-4 rounded-md py-2 bg-red-500 w-full ">Cancelar</Button>
                             <Button type="submit" className="px-4 rounded-md py-2 bg-blue-400  w-full" >Salvar</Button>
                         </div>
                     </Form.Root >
@@ -158,3 +211,4 @@ export default
         </>
     )
 }
+
