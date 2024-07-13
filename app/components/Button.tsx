@@ -8,7 +8,7 @@ type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
 export default function Button( { ...props }: ButtonProps )
 {
     return (
-        <button className={twMerge( "mx-4 px-4 rounded-md py-2 bg-blue-400  ", props.className )}{...props}></button>
+        <button className={twMerge( "mx-0 px-4 rounded-md py-2 bg-blue-400  ", props.className )}{...props}></button>
 
     )
 }

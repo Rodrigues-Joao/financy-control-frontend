@@ -1,15 +1,13 @@
 import { InputHTMLAttributes, forwardRef } from "react";
 import { twMerge } from "tailwind-merge";
-interface InputProps extends InputHTMLAttributes<HTMLInputElement>
-{
-
-}
+import Input, { InputProps } from "../../Input";
 
 
-const FieldInput = forwardRef<HTMLInputElement, InputProps>( function FieldInput( { type = "text", ...props }: InputProps, ref )
+
+const FieldInput = forwardRef<HTMLInputElement, InputProps>( function FieldInput( { type = "text", icon, iconColor, ...props }: InputProps, ref )
 {
     return (
-        <input {...props} ref={ref} type={type} className={twMerge( ` rounded bg-transparent placeholder:text-gray-300 text-md border border-gray-700  px-2 py-3  ${ props.className }` )} />
+        <Input {...props} ref={ref} type={type} icon={icon} iconColor={iconColor} />
     )
 } )
 

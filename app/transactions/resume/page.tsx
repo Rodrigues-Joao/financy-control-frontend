@@ -6,7 +6,7 @@ import TransactionItemList from "@/app/components/TransactionItemList";
 
 import { api } from "@/app/lib/axios";
 import { ResponseTransactionsType, TransactionType } from "@/app/types/transactions";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import { faPlusCircle, faSearch } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 
@@ -22,7 +22,7 @@ export default async function Resume()
     return (
         <div className="flex flex-col min-h-scre  ">
             <Header title="Extrato"></Header>
-            <Input></Input>
+            <Input className="mx-4" icon={faSearch}></Input>
             <div className="flex flex-row px-4  w-full  md:w-2/3">
                 <h1 className="text-xl">Resumo do mês {monthNames[new Date().getMonth()]}</h1>
             </div>
