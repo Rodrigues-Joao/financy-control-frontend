@@ -7,8 +7,6 @@ import { CategoriesType, ResponseCategoriesType } from "../types/categories";
 import { ResponseAccountsType } from "../types/accounts";
 import { CurrencyInput } from "react-currency-mask";
 import Button from "./Button";
-import Header from "./Header";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod"
 import Modal from "./Modal";
 import List from "./List/Index";
@@ -16,26 +14,14 @@ import { faAngleDown, faAngleRight, faArrowRight, faHouse } from "@fortawesome/f
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import CurrencyNumber from "./CurrencyNumber";
 import { api } from "../lib/axios";
+import { createTransactionSchema, CreateTransactionSchema } from "../types/transactions";
+import Transactions from "../api-functions/transactions";
 interface AddTransactionProps
 {
     categories: ResponseCategoriesType;
     accounts: ResponseAccountsType;
 }
 
-const createTransactionSchema = z.object( {
-    paymentMethod: z.string(),
-    description: z.string().min( 1, "Descrição é necessária" ),
-    amount: z.number( { required_error: "Coloque um valor" } ).min( 0.1, "Coloque um valor" ),
-    installments: z.coerce.number().default( 1 ),
-    isRecurrence: z.boolean().default( false ),
-    paymentTypeId: z.coerce.number(),
-    transactionsTypeId: z.coerce.number(),
-    accountsId: z.coerce.number(),
-    userId: z.number().default( 1 ),
-    categoryId: z.coerce.number(),
-    date: z.string()
-} )
-type CreateTransactionSchema = z.infer<typeof createTransactionSchema>
 export default function AddTransaction( { categories, accounts }: AddTransactionProps )
 {
     const [colorAmount, setColorAmount] = useState( "placeholder:text-red-500  text-red-500" )
@@ -61,22 +47,9 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
 
     async function handleCreateTransactions( data: CreateTransactionSchema )
     {
-        console.log( data.transactionsTypeId )
 
-        let result = await api.post( "transactions", {
-            description: data.description,
-            amount: data.amount,
-            installments: data.installments | 1,
-            isRecurrence: isRecurrence,
-            paymentTypeId: data.paymentTypeId,
-            transactionsTypeId: data.transactionsTypeId,
-            accountsId: data.accountsId,
-            userId: 1,
-            categoryId: data.categoryId,
-            date: new Date( data.date )
-        } )
-
-        console.log( result.data )
+        let result = await Transactions.Create( data )
+        console.log( result.message )
     }
 
     function handlepaymentTypeChange( event: any ): void
@@ -206,8 +179,9 @@ export default function AddTransaction( { categories, accounts }: AddTransaction
             </Field.Root>
             <Field.Root>
                 <Field.Description>Descrição</Field.Description>
-                <Field.Input {...register( "description" )} placeholder="Digite a descrição" className={errors.description?.message ? "border-red-500" : ''}></Field.Input>
-                {/* {errors.description?.message && <p className="text-red-800">{errors.description?.message}</p>} */}
+                <Field.Input  {...register( "description" )} placeholder="Digite a descrição" className={errors.description?.message ? "border-red-500" : ''}></Field.Input>
+
+                {errors.description?.message && <p className="text-red-800">{errors.description?.message}</p>}
 
             </Field.Root>
             <Field.Root>

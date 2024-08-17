@@ -1,12 +1,8 @@
-
-
 import Accounts from "@/app/api-functions/accounts";
 import Categories from "@/app/api-functions/categories";
 import AddTransaction from "@/app/components/AddTransaction";
 import Header from "@/app/components/Header";
-import { api } from "@/app/lib/axios";
-import { ResponseAccountsType } from "@/app/types/accounts";
-import { ResponseCategoriesType } from "@/app/types/categories";
+
 export default async function Add()
 {
     const [resCategories, resAccounts] = await Promise.all( [

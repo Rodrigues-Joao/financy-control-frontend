@@ -16,7 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>( function Input( { type =
             {icon &&
                 <FontAwesomeIcon className="w-6 absolute right-2 h-full hover:cursor-pointer" icon={icon} color={iconColor} onClick={iconClick} />
             }
-            <input type={type} className={twMerge( `w-full h-full block py-2 px-2  border-none bg-transparent ` )}>
+            <input {...props} ref={ref} type={type} className={twMerge( `w-full h-full block py-2 px-2  border-none bg-transparent ` )}>
             </input>
         </div>
     )
